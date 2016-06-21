@@ -1,0 +1,399 @@
+<ui:composition template="templateMenu.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui2="http://java.sun.com/jsf/facelets"
+	xmlns:tm="http://java.sun.com/jsf/composite/terminal/1_0/components">
+	
+	<ui:define name="title">
+		<h:outputText value="#{msg['pages.registerQuestions.title']}" />
+	</ui:define>
+	
+
+	<ui:define name="principal">
+	
+	
+    <h1><p:outputLabel value="#{msg['pages.registerQuestions.menu']}"/></h1>
+    
+    
+  <h3><p:outputLabel value="#{msg['pages.registerQuestions.titleFormEssay']}" /></h3>
+ 	<h:form id="formEssays">
+		<p:panelGrid columns="2">
+			 <p:outputLabel value="#{msg['pages.registerQuestions.header']}" />
+      		 <p:inputText value="#{essayManagedBean.essay.header}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.level']}" />
+      		 <p:inputText value="#{essayManagedBean.essay.level}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.answerTime']}" />
+      		 <p:inputText value="#{essayManagedBean.essay.answerTime}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.creationDate']}" />
+      		 <p:calendar value="#{essayManagedBean.essay.creationDate}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.answer']}" />
+      		 <p:inputText value="#{essayManagedBean.essay.correctAnswer}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.content.name']}" />
+			<p:selectOneMenu value="#{essayManagedBean.content}"
+				converter="converterContent">
+				<f:selectItem itemValue="" itemLabel="#{msg['pages.registerQuestions.content.msg']}" />
+				<f:selectItems value="#{essayManagedBean.allContents}" var="aux"
+					itemValue="#{aux}" itemLabel="#{aux.name}" />
+			</p:selectOneMenu>
+
+		</p:panelGrid>
+		<p:commandButton value="#{msg['pages.comuns.form.btnSave']}" update=":formEssays, :formTableEssays:tableEssays, :formTableChoice:tableChoice, :formTableTOF:tableTOFS"  action="#{essayManagedBean.save}"/>
+	</h:form>
+	<br/>
+	<br/>
+	<h3><p:outputLabel value="#{msg['pages.registerQuestions.titleFormTableEssay']}" /></h3>
+	<h:form id="formTableEssays">
+	
+	   <p:growl id="growl" showDetail="true" />
+	
+		<p:dataTable value="#{essayManagedBean.lstEssays}" var="f"
+			editable="true" id="tableEssays"
+			selectionMode="single" selection="#{essayManagedBean.essaySelected}"  rowKey="#{f.idQuest}"
+			>
+
+		   <p:ajax event="rowSelect"   update=":formTableEssays" />
+           <p:ajax event="rowUnselect" update=":formTableEssays" />
+           <p:ajax event="rowEdit"     listener="#{essayManagedBean.onRowEdit}"     update=":formTableEssays" /> 
+
+			<p:column headerText="#{msg['pages.registerQuestions.idQuestion']}">
+				<h:outputText value="#{f.idQuest}" />
+			</p:column>
+
+
+			<p:column headerText="#{msg['pages.registerQuestions.header']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.header}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="enunciadoDis" value="#{f.header}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.level']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.level}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="dificuldadeDis" value="#{f.level}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.answerTime']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.answerTime}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="tempo_estimadoDis" value="#{f.answerTime}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.creationDate']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.creationDate}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="data_criacaoDis" value="#{f.creationDate}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.registerQuestions.answer']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.correctAnswer}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="respostaDis" value="#{f.correctAnswer}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+						
+			
+			<p:column style="width:70px" headerText="#{msg['pages.commus.form.opcoes']}">
+					<p:rowEditor />
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{essayManagedBean.remove(f)}"
+						update=":formTableEssays:tableEssays" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	<br/>
+	<br/>
+	<h3><p:outputLabel value="#{msg['pages.registerQuestions.titleFormChoice']}" /></h3>
+ 	<h:form id="formChoice">
+		<p:panelGrid columns="2">
+			 <p:outputLabel value="#{msg['pages.registerQuestions.header']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.header}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.level']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.level}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.answerTime']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.answerTime}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.creationDate']}" />
+      		 <p:calendar value="#{choiceManagedBean.choice.creationDate}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.quest1']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.choiceFirst}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.quest2']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.choiceTwo}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.quest3']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.choiceThree}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.quest4']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.choiceFour}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.quest5']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.choiceFive}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.answer']}" />
+      		 <p:inputText value="#{choiceManagedBean.choice.answer}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.content.name']}" />
+			<p:selectOneMenu value="#{choiceManagedBean.content}"
+				converter="converterContent">
+				<f:selectItem itemValue="" itemLabel="#{msg['pages.registerQuestions.content.msg']}" />
+				<f:selectItems value="#{choiceManagedBean.allContents}" var="aux"
+					itemValue="#{aux}" itemLabel="#{aux.name}" />
+			</p:selectOneMenu>
+
+		</p:panelGrid>
+		<p:commandButton value="#{msg['pages.comuns.form.btnSave']}" update=":formChoice, :formTableEssays:tableEssays, :formTableChoice:tableChoice, :formTableTOF:tableTOFS"  action="#{choiceManagedBean.save}"/>
+	</h:form>	
+	
+	<br/>
+	<br/>
+		<h3><p:outputLabel value="#{msg['pages.registerQuestions.titleFormTableChoice']}" /></h3>
+	<h:form id="formTableChoice">
+	
+	   <p:growl id="growl" showDetail="true" />
+	
+		<p:dataTable value="#{choiceManagedBean.lstChoices}" var="f"
+			editable="true" id="tableChoice"
+			selectionMode="single" selection="#{choiceManagedBean.choiceSelected}"  rowKey="#{f.idQuest}"
+			>
+
+		   <p:ajax event="rowSelect"   update=":formTableChoice" />
+           <p:ajax event="rowUnselect" update=":formTableChoice" />
+           <p:ajax event="rowEdit"     listener="#{choiceManagedBean.onRowEdit}"     update=":formTableChoice" /> 
+
+			<p:column headerText="#{msg['pages.registerQuestions.idQuestion']}">
+				<h:outputText value="#{f.idQuest}" />
+			</p:column>
+
+
+			<p:column headerText="#{msg['pages.registerQuestions.header']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.header}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="enunciadoM" value="#{f.header}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.level']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.level}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="dificuldadeM" value="#{f.level}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.answerTime']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.answerTime}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="tempo_estimadoM" value="#{f.answerTime}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.creationDate']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.creationDate}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="data_criacaoM" value="#{f.creationDate}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.registerQuestions.answer']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.answer}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="respostaM" value="#{f.answer}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			
+			<p:column style="width:70px" headerText="#{msg['pages.commus.form.opcoes']}">
+					<p:rowEditor />
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{choiceManagedBean.remove(f)}"
+						update=":formTableChoice:tableChoice" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	<br/>
+	<br/>
+	<h3><p:outputLabel value="#{msg['pages.registerQuestions.titleFormTOF']}" /></h3>
+	 	<h:form id="formTOF">
+		<p:panelGrid columns="2">
+			 <p:outputLabel value="#{msg['pages.registerQuestions.header']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.header}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.level']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.level}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.answerTime']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.answerTime}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.creationDate']}" />
+      		 <p:calendar value="#{tofManagedBean.tof.creationDate}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.countItens']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.count}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.tof1']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.TO1}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.tof2']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.TO2}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.tof3']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.TO3}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.tof4']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.TO4}"/>
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.tof5']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.TO5}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.answer']}" />
+      		 <p:inputText value="#{tofManagedBean.tof.answer}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerQuestions.content.name']}" />
+			<p:selectOneMenu value="#{tofManagedBean.content}"
+				converter="converterContent">
+				<f:selectItem itemValue="" itemLabel="#{msg['pages.registerQuestions.content.msg']}" />
+				<f:selectItems value="#{tofManagedBean.allContents}" var="aux"
+					itemValue="#{aux}" itemLabel="#{aux.name}" />
+			</p:selectOneMenu>
+
+		</p:panelGrid>
+		<p:commandButton value="#{msg['pages.comuns.form.btnSave']}" update=":formTOF, :formTableEssays:tableEssays, :formTableChoice:tableChoice, :formTableTOF:tableTOFS "  action="#{tofManagedBean.save}"/>
+	</h:form>
+	<br/>
+	<br/>
+	<br/>
+	
+	<h3><p:outputLabel value="#{msg['pages.registerQuestions.titleFormTableTOF']}" /></h3>
+	<h:form id="formTableTOF">
+	
+	   <p:growl id="growl" showDetail="true" />
+	
+		<p:dataTable value="#{tofManagedBean.lstTofs}" var="f"
+			editable="true" id="tableTOFS"
+			selectionMode="single" selection="#{tofManagedBean.tofSelected}"  rowKey="#{f.idQuest}"
+			>
+
+		   <p:ajax event="rowSelect"   update=":formTableTOF" />
+           <p:ajax event="rowUnselect" update=":formTableTOF" />
+           <p:ajax event="rowEdit"     listener="#{tofManagedBean.onRowEdit}"     update=":formTableTOF" /> 
+
+			<p:column headerText="#{msg['pages.registerQuestions.idQuestion']}">
+				<h:outputText value="#{f.idQuest}" />
+			</p:column>
+
+
+			<p:column headerText="#{msg['pages.registerQuestions.header']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.header}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="enunciadoVouF" value="#{f.header}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.level']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.level}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="dificuldadeVouF" value="#{f.level}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.answerTime']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.answerTime}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="tempo_estimadoVouF" value="#{f.answerTime}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerQuestions.creationDate']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.creationDate}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="data_criacaoVouF" value="#{f.creationDate}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.registerQuestions.answer']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.answer}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="respostaVouF" value="#{f.answer}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>	
+		
+			<p:column style="width:70px" headerText="#{msg['pages.commus.form.opcoes']}">
+					<p:rowEditor />
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{tofManagedBean.remove(f)}"
+						update=":formTableTOF:tableTOFS" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	<br/>   
+	
+	<br/>
+	<br/>
+	</ui:define>
+</ui:composition>

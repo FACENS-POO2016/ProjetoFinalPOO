@@ -1,0 +1,99 @@
+<ui:composition template="templateMenu.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui2="http://java.sun.com/jsf/facelets"
+	xmlns:tm="http://java.sun.com/jsf/composite/terminal/1_0/components">
+	
+	<ui:define name="title">
+		<h:outputText value="#{msg['pages.registerTeacher.title']}" />
+	</ui:define>
+	
+
+	<ui:define name="principal">
+	
+	
+    <h1><p:outputLabel value="#{msg['pages.registerTeacher.menu']}"/></h1>
+    
+ 	<h:form id="formTeachers">
+		<p:panelGrid columns="2">
+			 <p:outputLabel value="#{msg['pages.registerTeacher.name']}" />
+      		 <p:inputText value="#{teacherManagedBean.teacher.name}"/>
+      		 <p:outputLabel value="#{msg['pages.registerTeacher.email']}" />
+     		 <p:inputText value="#{teacherManagedBean.teacher.email}"/>    
+		</p:panelGrid>
+		<br/>
+		<p:commandButton value="#{msg['pages.comuns.form.btnSave']}" update=":formTeachers, :formTableTeachers:tableTeacher"  action="#{teacherManagedBean.save}"/>
+	</h:form>
+
+    
+    <h3><p:outputLabel value="#{msg['pages.registerTeacher.tableTitle']}"/></h3>
+	<h:form id="formTableTeachers">
+	
+	    <p:growl id="growl" showDetail="true" />
+	
+		<p:dataTable value="#{teacherManagedBean.lstTeachers}" var="f"
+			editable="true" id="tableTeacher"
+			selectionMode="single" selection="#{teacherManagedBean.teacherSelected}"  rowKey="#{f.idTeacher}"
+			>
+
+		   <p:ajax event="rowSelect"   update=":formTableDisciplines" />
+           <p:ajax event="rowUnselect" update=":formTableDisciplines" />
+           <p:ajax event="rowEdit"     listener="#{teacherManagedBean.onRowEdit}"     update=":formTableDisciplines" /> 
+
+			<p:column headerText="#{msg['pages.registerTeacher.id']}">
+				<h:outputText value="#{f.idTeacher}" />
+			</p:column>
+
+			<p:column headerText="#{msg['pages.registerTeacher.name']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.name}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="nome" value="#{f.name}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="#{msg['pages.registerTeacher.email']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.email}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="email" value="#{f.email}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column style="width:70px" headerText="#{msg['pages.commus.form.opcoes']}">
+					<p:rowEditor />
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{teacherManagedBean.remove(f)}"
+						update=":formTableTeachers:tableTeacher" />
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+	<br/>
+
+    <h:form id="formTableDisciplines">
+	    <h3><p:outputLabel value="#{msg['pages.registerTeacher.disciplinesTeacher']}: #{teacherManagedBean.teacherSelected.name}" /></h3>
+		<p:dataTable value="#{teacherManagedBean.disciplinesTeacher}" var="prod"	id="tableDisciplines">
+
+			<p:column headerText="#{msg['pages.registerTeacher.discipline.idDisc']}">
+						<p:outputLabel value="#{prod.idDiscipline}" />
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.registerTeacher.discipline.name']}">
+				<h:outputText value="#{prod.name}" />
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+	</ui:define>
+</ui:composition>

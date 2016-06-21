@@ -1,0 +1,104 @@
+<ui:composition template="templateMenu.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui2="http://java.sun.com/jsf/facelets"
+	xmlns:tm="http://java.sun.com/jsf/composite/terminal/1_0/components">
+	
+	<ui:define name="title">
+		<h:outputText value="#{msg['pages.registerDiscipline.title']}" />
+	</ui:define>
+	
+	<ui:define name="principal">
+	
+	<h1><p:outputLabel value="#{msg['pages.registerDiscipline.menu']}" /> </h1>
+ 	<h:form id="formDisciplines">
+
+		<p:panelGrid columns="2">
+			
+
+			<p:outputLabel value="#{msg['pages.registerDiscipline.name']}" />
+			<p:inputText value="#{disciplineManagedBean.discipline.name}" />
+
+			<p:outputLabel value="#{msg['pages.registerDiscipline.teacher.name']}" />
+			<p:selectOneMenu value="#{disciplineManagedBean.teacher}"
+				converter="converterTeacher">
+				<f:selectItem itemValue="" itemLabel="#{msg['pages.registerDiscipline.teacher.msg']}" />
+				<f:selectItems value="#{disciplineManagedBean.allTeachers}" var="aux"
+					itemValue="#{aux}" itemLabel="#{aux.name}" />
+			</p:selectOneMenu>
+
+		</p:panelGrid>
+		<br/>
+		<p:commandButton value="#{msg['pages.comuns.form.btnSave']}" action="#{disciplineManagedBean.save}"
+			update=":formDisciplines, :formTableDisciplines" />
+	</h:form>
+
+    <h3><p:outputLabel value="#{msg['pages.registerDiscipline.tableTitle']}" /> </h3>
+    
+	<h:form id="formTableDisciplines">
+	<p:growl id="growl" showDetail="true" />
+	
+		<p:dataTable value="#{disciplineManagedBean.disciplines}" var="f"
+			editable="true" id="tableDisciplines"
+			selectionMode="single" selection="#{disciplineManagedBean.disciplineSelected}"  rowKey="#{f.idDiscipline}"
+			>
+
+		   <p:ajax event="rowSelect"   update=":formTableContents" />
+           <p:ajax event="rowUnselect" update=":formTableContents" />
+           <p:ajax event="rowEdit"     listener="#{disciplineManagedBean.onRowEdit}"     update=":formTableContents" /> 
+		
+			<p:column headerText="#{msg['pages.registerDiscipline.teacher.name']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.objTeacher.name}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu value="#{f.objTeacher}"
+							converter="converterTeacher" style="width:100%">
+							<f:selectItem itemValue="" itemLabel="#{msg['pages.registerDiscipline.teacher.msg']}" />
+							<f:selectItems value="#{disciplineManagedBean.allTeachers}"
+								var="aux" itemValue="#{aux}" itemLabel="#{aux.name}" />
+						</p:selectOneMenu>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="#{msg['pages.registerDiscipline.name']}">
+				  <p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.name}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="valor" value="#{f.name}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:70px" headerText="#{msg['pages.commus.form.opcoes']}">
+					<p:rowEditor />
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{disciplineManagedBean.remove(f)}"
+						update=":formTableDisciplines" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	
+	<h:form id="formTableContents">
+	    <h3><p:outputLabel value="#{msg['pages.registerDiscipline.disciplinesContent']}: #{disciplineManagedBean.contentSelected.name}" /></h3>
+		<p:dataTable value="#{disciplineManagedBean.contentsDisciplines}" var="prod"	id="tableContents">
+
+			<p:column headerText="#{msg['pages.registerDiscipline.content.id']}">
+						<p:outputLabel value="#{prod.idContent}" />
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.registerDiscipline.content.name']}">
+				<h:outputText value="#{prod.name}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	</ui:define>
+</ui:composition>

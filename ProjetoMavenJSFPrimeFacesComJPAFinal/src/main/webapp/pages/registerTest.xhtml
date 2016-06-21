@@ -1,0 +1,125 @@
+<ui:composition template="templateMenu.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui2="http://java.sun.com/jsf/facelets"
+	xmlns:tm="http://java.sun.com/jsf/composite/terminal/1_0/components">
+	
+	<ui:define name="title">
+		<h:outputText value="#{msg['pages.registerTest.title']}" />
+	</ui:define>
+	
+
+	<ui:define name="principal">
+	
+	
+    <h1><p:outputLabel value="#{msg['pages.registerTest.menu']}"/></h1>
+    
+    
+  
+ 	<h:form id="formTest">
+		<p:panelGrid columns="2">
+			 <p:outputLabel value="#{msg['pages.registerTest.name']}" />
+      		 <p:inputText value="#{testManagedBean.test.nameTest}"/>
+      		 <p:outputLabel value="#{msg['pages.registerTest.class']}" />
+      		 <p:inputText value="#{testManagedBean.test.nameClass}"/>
+      		 <p:outputLabel value="#{msg['pages.registerTest.course']}" />
+      		 <p:inputText value="#{testManagedBean.test.course}"/>	  
+      		 <p:outputLabel value="#{msg['pages.registerTest.colleague']}" />
+      		 <p:inputText value="#{testManagedBean.test.nameColleague}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerTest.dateTest']}" />
+      		 <p:calendar value="#{testManagedBean.test.testDate}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerTest.form.contents']}"  />
+        		<p:selectManyMenu id="questions" 
+       			 value="#{testManagedBean.lstContentsSelected}" 
+        		 converter="converterContent"
+        		 var="sc" filter="true" filterMatchMode="contains" 
+        				showCheckbox="true" panelStyle="width:180px">
+  		 				<f:selectItems value="#{testManagedBean.lstContents}"  style="width:191px" var="cont" 
+  		 				itemLabel="#{cont.name}" itemValue="#{cont}" />
+            			<p:column>
+                			<h:outputText style="width:10%" styleClass="fa fa-file-text" />
+            			</p:column>
+      			 		<p:column>
+                			<h:outputText value="#{sc.name}" />
+            			</p:column>
+        		</p:selectManyMenu>
+      		
+      		
+      		 <p:outputLabel value="#{msg['pages.registerTest.count']}" />
+      		 <p:inputText value="#{testManagedBean.test.countQuestions}"/>
+      		 
+      		 <p:outputLabel value="#{msg['pages.registerTest.levelTest']}" />
+      		 <p:inputText value="#{testManagedBean.test.levelTest}"/>
+      		 
+		</p:panelGrid>
+		<p:commandButton value="#{msg['pages.comuns.form.btnSave']}" action="#{testManagedBean.save}"
+			update=":formTest, :formShowTest, :formGenerate" validateClient="true" />
+		
+	</h:form>
+	<br/>
+	
+	<h:form id="formShowTest"> 
+    <p:dataTable var="aux" value="#{testManagedBean.test.lstQuestions}" draggableRows="true">
+        <p:ajax event="rowReorder" listener="#{testManagedBean.onRowReorder}" update=":formShowTest" />
+        
+        <p:column headerText="#{msg['pages.registerQuestions.idQuestion']}">
+            <h:outputText value="#{aux.idQuest}" />
+        </p:column>
+ 
+        <p:column headerText="#{msg['pages.registerQuestions.header']}">
+            <h:outputText value="#{aux.header}" />
+        </p:column>
+ 
+        <p:column headerText="#{msg['pages.registerQuestions.level']}">
+            <h:outputText value="#{aux.level}" />
+        </p:column>
+ 
+        <p:column headerText="#{msg['pages.registerQuestions.answerTime']}">
+            <h:outputText value="#{aux.answerTime}" />
+        </p:column>
+        
+        <p:column headerText="#{msg['pages.registerQuestions.creationDate']}">
+            <h:outputText value="#{aux.creationDate}" />
+        </p:column>
+        
+        <p:column headerText="#{msg['pages.registerQuestions.answer']}">
+            <h:outputText value="#{aux.correctAnswer}" />
+        </p:column>
+    </p:dataTable>
+</h:form>
+<br/>
+<h:form id="formGenerate">
+  	<p:panel header="#{msg['pages.registerTest.menu']}">
+  	<p:panelGrid columns="2" >
+  	
+  			<p:outputLabel value="#{msg['pages.registerTest.generateTest']}"  />
+			<p:selectOneMenu value="#{testManagedBean.test}"
+				converter="converterTest" var="sm" validateClient="true" filter="true"
+       filterMatchMode="contains">
+        	<f:selectItem itemValue="" itemLabel="#{msg['pages.registerTest.test.msg']}" />
+        	<f:selectItems value="#{testManagedBean.lstTests}" var="p" itemValue="#{p}" itemLabel="#{p.nameTest}"/>
+  
+             <p:column style="width:5%">
+                 <h:outputText styleClass="fa fa-file-text-o" />
+             </p:column>
+  
+             <p:column>
+                 <h:outputText value="#{sm.nameTest}" />
+             </p:column>
+             </p:selectOneMenu>
+  	</p:panelGrid>
+  	</p:panel>
+  	<br/>
+  		<p:commandButton value="Generate" id="generatePDF"
+  		action="#{testManagedBean.generateTest}" 
+  		styleClass="ui-priority-primary" ajax="false" update=":formGenerate, :formShowTest, :formTest"/>
+  	</h:form>
+	
+	
+	</ui:define>
+</ui:composition>
