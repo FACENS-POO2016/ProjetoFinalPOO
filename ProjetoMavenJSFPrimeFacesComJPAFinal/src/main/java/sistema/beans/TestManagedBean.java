@@ -26,6 +26,8 @@ import org.primefaces.event.RowEditEvent;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -96,13 +98,37 @@ public class TestManagedBean
          		  stringContents += test.getLstContents().get(i).getName() + ", ";
          	   }
             }
-            document.add(new Paragraph("Colleague: " + test.getNameColleague()));
-            document.add(new Paragraph("Class: " + test.getNameClass()));
-            document.add(new Paragraph("Course: " + test.getCourse()));            
-            document.add(new Paragraph("Test Date: " + test.getTestDate().getDay()
-         		   +"/" + test.getTestDate().getMonth()+"/"+test.getTestDate().getYear()));
-            document.add(new Paragraph("Contents: " + stringContents));
-                       
+            
+            //C:\Users\M\workspace
+            Image img = Image.getInstance("C:\\Users\\M\\workspace\\alien.jpg");
+            document.add(img);
+            
+            document.add(Chunk.NEWLINE);            
+            
+            Paragraph colleague = new Paragraph("Colleague: " + test.getNameColleague());
+            colleague.setAlignment(Element.ALIGN_CENTER);
+            document.add(colleague);
+            
+            Paragraph classe = new Paragraph("Class: " + test.getNameClass());
+            classe.setAlignment(Element.ALIGN_CENTER);
+            document.add(classe);
+            
+            Paragraph course = new Paragraph("Course: " + test.getCourse());
+            course.setAlignment(Element.ALIGN_CENTER);
+            document.add(course);
+            
+            Paragraph data = new Paragraph("Test Date: " + test.getTestDate().getDay()
+         		   +"/" + test.getTestDate().getMonth()+"/"+test.getTestDate().getYear());
+            data.setAlignment(Element.ALIGN_CENTER);
+            document.add(data);
+            
+            Paragraph contents = new Paragraph("Contents: " + stringContents);
+            contents.setAlignment(Element.ALIGN_CENTER);
+            document.add(contents);
+            
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            
             for(int i = 0; i < test.getLstQuestions().size(); i++){
          	   		document.add(new Paragraph(""+(i + 1)+") " + test.getLstQuestions().get(i).getHeader()));
          	   		document.add(new Paragraph(""+ "Minimum Estimated Time: "+  test.getLstQuestions().get(i).getAnswerTime() +", Test Level: " + 
@@ -130,8 +156,7 @@ public class TestManagedBean
            					cont++;
            					document.add( Chunk.NEWLINE );
            				}
-         	   }
-         	   
+         	   }      	   
          	   		
          		   document.add(new Paragraph("Answer:"));
          		   document.add(Chunk.NEWLINE);
