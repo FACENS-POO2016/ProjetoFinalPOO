@@ -32,10 +32,13 @@ public class TeacherManagedBean {
 	}
 
 	public void save() {
-		teacher = tService.salvar(teacher);
-		if (lstTeachers != null)
-			lstTeachers.add(teacher);
-		teacher = new Teacher();
+		if(teacher.getEmail() != "" && teacher.getName() != "")
+		{
+			teacher = tService.salvar(teacher);
+		    if (lstTeachers != null)
+			   lstTeachers.add(teacher);
+		    teacher = new Teacher();
+		}
 	}
 
 	public DataModel<Teacher> getLstTeachers() {

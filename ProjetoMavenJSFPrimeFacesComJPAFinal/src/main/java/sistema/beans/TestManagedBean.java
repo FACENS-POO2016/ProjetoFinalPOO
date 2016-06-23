@@ -13,6 +13,7 @@ import sistema.service.QuestionService;
 import sistema.service.TestService;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -83,21 +84,23 @@ public class TestManagedBean
 	@SuppressWarnings("deprecation")
 	public void generateTest() {		
         Document document = new Document();
-        String stringContents = "";
+        StringBuilder stringContents = new StringBuilder();
        	        
         try {           
         	 PdfWriter.getInstance(document, 
         		        new FileOutputStream("C:\\Users\\M\\Desktop\\"+ test.getIdTest()+"-"+test.getNameTest()+".pdf"));
         	 document.open();
            
-            for(int i = 0; i < test.getLstContents().size(); i++){
+            /*for(int i = 0; i < test.getLstContents().size(); i++){
          	   if(test.getLstContents().size() == 1){
          		  stringContents += test.getLstContents().get(i).getName();
         	   }
          	   else{
          		  stringContents += test.getLstContents().get(i).getName() + ", ";
          	   }
-            }
+            } */
+            test.getLstContents().forEach(x -> stringContents.append(x.getName()).append(", "));
+            String strinContent = stringContents.toString().substring(0, stringContents.toString().length() - 2 );
             
             //C:\Users\M\workspace
             Image img = Image.getInstance("C:\\Users\\M\\workspace\\alien.jpg");
@@ -117,12 +120,14 @@ public class TestManagedBean
             course.setAlignment(Element.ALIGN_CENTER);
             document.add(course);
             
-            Paragraph data = new Paragraph("Test Date: " + test.getTestDate().getDay()
-         		   +"/" + test.getTestDate().getMonth()+"/"+test.getTestDate().getYear());
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String date = df.format(test.getTestDate());
+            
+            Paragraph data = new Paragraph("Test Date: " + date);
             data.setAlignment(Element.ALIGN_CENTER);
             document.add(data);
             
-            Paragraph contents = new Paragraph("Contents: " + stringContents);
+            Paragraph contents = new Paragraph("Contents: " + strinContent); //stringContents.toString());
             contents.setAlignment(Element.ALIGN_CENTER);
             document.add(contents);
             
