@@ -55,7 +55,7 @@ public class TestManagedBean
 		int cont = 0;
 		
 		for(int i = 0; i < lstSelecteds.size(); i++){		
-			if(lstSelecteds.get(i) .getLevel() <= lstSelecteds.get(i).getLevel() || cont < test.getCountQuestions()){
+			if(lstSelecteds.get(i) .getLevel() >= test.getLevelTest() && cont < test.getCountQuestions()){
 				test.addQuestion(lstSelecteds.get(i));
 				cont++;
 			}			
@@ -144,8 +144,9 @@ public class TestManagedBean
          	   	  Choice chc = (Choice)test.getLstQuestions().get(i);
      
          		int cont = 1;
+         		char aux = 'A';
          	   	for(int j = 0; j < 5; j++){
-         			   document.add(new Paragraph(""+ cont + ") "+ chc.getLstChoices().get(j)));
+         			   document.add(new Paragraph(""+ (aux++) + ") "+ chc.getLstChoices().get(j)));
          			   cont++;
          			   document.add( Chunk.NEWLINE );
          		   }
@@ -157,7 +158,7 @@ public class TestManagedBean
            			int cont = 1;
            			for(int j = 0; j < 5; j++)
            				{
-           					document.add(new Paragraph(""+ cont + ") "+"(  )" + tof.getLstOptions().get(j)));
+           					document.add(new Paragraph("(  ) " + tof.getLstOptions().get(j)));
            					cont++;
            					document.add( Chunk.NEWLINE );
            				}
