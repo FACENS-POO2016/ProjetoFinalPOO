@@ -4,6 +4,7 @@ package sistema.beans;
 
 
 import sistema.modelos.Contents;
+import sistema.modelos.Essay;
 import sistema.modelos.Choice;
 import sistema.modelos.Questions;
 import sistema.modelos.Test;
@@ -163,8 +164,9 @@ public class TestManagedBean
            					document.add( Chunk.NEWLINE );
            				}
          	   }      	   
-         	   		
+         	   	if(test.getLstQuestions().get(i) instanceof Essay){	
          		   document.add(new Paragraph("Answer:"));
+         		}
          		   document.add(Chunk.NEWLINE);
         		   document.add(Chunk.NEWLINE);
          		   document.add(Chunk.NEWLINE);
